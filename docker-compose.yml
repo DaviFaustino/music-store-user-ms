@@ -1,0 +1,22 @@
+volumes:
+  user-db-data:
+
+services:
+  database:
+    image: postgres:latest
+    container_name: user-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: user
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: email-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
