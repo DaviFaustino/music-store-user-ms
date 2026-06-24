@@ -1,0 +1,143 @@
+package com.davifaustino.musicstore.user.application.outbox;
+
+import java.time.Instant;
+import java.util.UUID;
+
+public class OutboxEvent {
+
+    private UUID id;
+    private UUID correlationId;
+    private String eventType;
+    private String routingKey;
+    private String payload;
+    private OutboxStatus status;
+    private Integer attempts;
+    private Instant occurredAt;
+    private Instant publishedAt;
+
+    private static final int MAX_ATTEMPTS = 10;
+
+    public OutboxEvent() {
+    }
+
+    public OutboxEvent(UUID id, UUID correlationId, String eventType, String routingKey, String payload, OutboxStatus status,
+            Integer attempts, Instant occurredAt, Instant publishedAt) {
+        this.id = id;
+        this.correlationId = correlationId;
+        this.eventType = eventType;
+        this.routingKey = routingKey;
+        this.payload = payload;
+        this.status = status;
+        this.attempts = attempts;
+        this.occurredAt = occurredAt;
+        this.publishedAt = publishedAt;
+    }
+
+    public static OutboxEvent pending(UUID correlationId, String eventType, String routingKey, String data) {
+        return new OutboxEvent(
+            UUID.randomUUID(),
+            correlationId,
+            eventType,
+            routingKey,
+            data,
+            OutboxStatus.PENDING,
+            0,
+            Instant.now(),
+            null
+        );
+    }
+
+    public void failedAttempt() {
+        attempts++;
+
+        if (attempts >= MAX_ATTEMPTS) {
+            status = OutboxStatus.FAILED;
+        }
+    }
+
+    public void processed() {
+        status = OutboxStatus.PROCESSED;
+        publishedAt = Instant.now();
+    }
+
+    // public void retry() {
+    //     if (status != OutboxStatus.FAILED) {
+    //         throw new IllegalStateException("Only failed events can be retried");
+    //     }
+
+    //     status = OutboxStatus.PENDING;
+    //     attempts = 0;
+    // }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(UUID correlationId) {
+        this.correlationId = correlationId;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public String getRoutingKey() {
+        return routingKey;
+    }
+
+    public void setRoutingKey(String routingKey) {
+        this.routingKey = routingKey;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public OutboxStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OutboxStatus status) {
+        this.status = status;
+    }
+
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
+    }
+
+    public Instant getOccurredAt() {
+        return occurredAt;
+    }
+
+    public void setOccurredAt(Instant occurredAt) {
+        this.occurredAt = occurredAt;
+    }
+
+    public Instant getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(Instant publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+}
