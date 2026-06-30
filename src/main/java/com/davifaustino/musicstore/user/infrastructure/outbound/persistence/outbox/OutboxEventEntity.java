@@ -24,6 +24,8 @@ public class OutboxEventEntity implements Serializable {
     @Id
     private UUID id;
     private UUID correlationId;
+    private String aggregateType;
+    private UUID aggregateId;
     private String eventType;
     private String routingKey;
     private String payload;

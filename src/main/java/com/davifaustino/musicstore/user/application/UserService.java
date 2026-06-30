@@ -36,6 +36,8 @@ public class UserService {
         var userCreatedEvent = new UserCreatedEvent(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
         var eventAsJson = objectMapper.writeValueAsString(userCreatedEvent);
         var outboxEvent = OutboxEvent.pending(
+            UUID.randomUUID(),
+            "USER",
             savedUser.getId(),
             "UserCreated",
             "user.created",

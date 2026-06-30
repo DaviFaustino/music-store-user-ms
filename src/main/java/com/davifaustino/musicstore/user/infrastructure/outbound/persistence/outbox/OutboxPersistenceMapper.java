@@ -11,6 +11,8 @@ public class OutboxPersistenceMapper {
         var outboxEvent = new OutboxEventEntity();
         outboxEvent.setId(event.getId());
         outboxEvent.setCorrelationId(event.getCorrelationId());
+        outboxEvent.setAggregateType(event.getAggregateType());
+        outboxEvent.setAggregateId(event.getAggregateId());
         outboxEvent.setEventType(event.getEventType());
         outboxEvent.setRoutingKey(event.getRoutingKey());
         outboxEvent.setPayload(event.getPayload());
@@ -25,6 +27,8 @@ public class OutboxPersistenceMapper {
         var event = new OutboxEvent();
         event.setId(outboxEvent.getId());
         event.setCorrelationId(outboxEvent.getCorrelationId());
+        event.setAggregateType(outboxEvent.getAggregateType());
+        event.setAggregateId(outboxEvent.getAggregateId());
         event.setEventType(outboxEvent.getEventType());
         event.setRoutingKey(outboxEvent.getRoutingKey());
         event.setPayload(outboxEvent.getPayload());
