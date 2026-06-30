@@ -1,0 +1,10 @@
+.git
+.gradle
+build
+bin
+.github
+.agents
+.codex
+HELP.md
+*.iml
+*.log
